@@ -1,3 +1,4 @@
+import createHttpError from "http-errors";
 import { Product } from "../models/product.js";
 
 export const getProducts = async (req, res) => {
@@ -5,18 +6,32 @@ export const getProducts = async (req, res) => {
     res.status(200).json(products);
 };
 
-export const getProductsByID = async (req, res) => {
-    const { productId } = req.params;
-    const product = await Product.findById(productId);
-
-    if (!product) {
-        return res.status(404).json({ message: 'Product not found' });
-    }
-
-    res.status(200).json(product);
-}
+export const getProductByID= async (req, res) => {
+  const { productId } = req.params;
+  const product = await Product.findById(productId);
+  if (!product) {
+   throw createHttpError(404, 'Product not found');
+  }
+  res.status(200).json(product);
+};
 
 export const createProduct = async (req, res) => {
   const product = await Product.create(req.body);
   res.status(201).json(product);
+};
+
+export const updateProduct = async (req, res) => {
+  const { productId } = req.params;
+
+  const product = await Product.findOneAndUpdate(
+    { _id: productId }, // Шукаємо по id
+    req.body,
+    { new: true }, // повертаємо оновлений документ
+  );
+
+  if (!product) {
+	throw createHttpError(404, 'Student not found');
+  }
+
+  res.status(200).json(product);
 };

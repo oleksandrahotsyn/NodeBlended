@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { getProducts, getProductsByID, createProduct } from '../controllers/productsController.js';
-import { get } from 'mongoose';
+import { getProducts, getProductByID, createProduct, updateProduct } from '../controllers/productsController.js';
 
 const router = Router();
 
 router.get('/products', getProducts);
-router.get('/products/:productId', getProductsByID);
+router.get('/products/:productId', getProductByID);
 router.post('/products', createProduct);
+router.patch('/products/:productId', updateProduct);
 
 export default router;
